@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"gofiber-faafo/api/routes"
-	"gofiber-faafo/pkg/book"
 	"log"
 	"time"
 
@@ -21,10 +20,6 @@ func main() {
 	}
 	fmt.Println("Database connection success!")
 
-	bookCollection := db.Collection("books")
-	bookRepo := book.NewRepo(bookCollection)
-	bookService := book.NewService(bookRepo)
-
 	app := fiber.New()
 	app.Use(cors.New())
 	app.Get("/", func(ctx *fiber.Ctx) error {
@@ -32,7 +27,9 @@ func main() {
 	})
 
 	api := app.Group("/api")
-	routes.BookRouter(api, bookService)
+	routes.SetupRoute(api, db)
+	//routes.BookRouter(api, bookService)
+	//routes.Account(api, bookService)
 
 	defer cancel()
 	log.Fatal(app.Listen(":8080"))
