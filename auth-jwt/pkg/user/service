@@ -1,0 +1,46 @@
+package user
+
+import (
+	"context"
+	entities "gofiber-faafo/entities/user"
+)
+
+// Service is an interface from which our api module can access our repository of all our models
+type Service interface {
+	CreateUser(ctx context.Context, user *entities.User) (*entities.User, error)
+	//FetchBooks() (*[]presenter.Book, error)
+	//UpdateBook(book *entities.User) (*entities.User, error)
+	//RemoveBook(ID string) error
+}
+
+type service struct {
+	repository UserRepository
+}
+
+// NewService is used to create a single instance of the service
+func NewService(r UserRepository) Service {
+	return &service{
+		repository: r,
+	}
+}
+
+// InsertBook is a service layer that helps insert book in BookShop
+func (s *service) CreateUser(ctx context.Context, book *entities.User) (*entities.User, error) {
+	return s.repository.CreateUser(ctx, book)
+}
+
+//
+//// FetchBooks is a service layer that helps fetch all books in BookShop
+//func (s *service) FetchBooks() (*[]presenter.Book, error) {
+//	return s.repository.ReadBook()
+//}
+//
+//// UpdateBook is a service layer that helps update books in BookShop
+//func (s *service) UpdateBook(book *entities.User) (*entities.User, error) {
+//	return s.repository.UpdateBook(book)
+//}
+//
+//// RemoveBook is a service layer that helps remove books from BookShop
+//func (s *service) RemoveBook(ID string) error {
+//	return s.repository.DeleteBook(ID)
+//}
