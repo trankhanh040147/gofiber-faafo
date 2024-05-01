@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	db, cancel := launcher.NewDBConnection()
+	db, cancel := launcher.NewDBConnection("mongodb://localhost:27017", "books")
 	app := launcher.NewApp()
 	launcher.SetupRoute(app, db)
 
