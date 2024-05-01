@@ -10,11 +10,18 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func NewDBConnection() (*mongo.Database, context.CancelFunc) {
+func NewDBConnection(uri, dbName string) (*mongo.Database, context.CancelFunc) {
+	loggerOptions := options.
+		Logger().
+		SetComponentLevel(options.LogComponentCommand, options.LogLevelDebug)
+
+	clientOptions := options.
+		Client().
+		ApplyURI(uri).
+		SetLoggerOptions(loggerOptions)
+
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(
-		"mongodb://127.0.0.1:27017/fiber?directConnection=true").SetServerSelectionTimeout(5*time.
-		Second))
+	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
 		cancel()
 		log.Fatal("Database Connection Error $s", err)
